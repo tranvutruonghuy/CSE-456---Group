@@ -1,0 +1,15 @@
+package com.group2.factory_pattern.DTO;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AccountRequestDto {
+     String accountNumber;
+     Double balance;
+     Double creditLimit;
+}
