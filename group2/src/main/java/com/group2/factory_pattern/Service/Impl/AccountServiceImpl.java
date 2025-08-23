@@ -3,6 +3,7 @@ package com.group2.factory_pattern.Service.Impl;
 import com.group2.factory_pattern.DTO.AccountRequestDto;
 import com.group2.factory_pattern.DTO.AccountResponseDto;
 import com.group2.factory_pattern.Entity.Account;
+import com.group2.factory_pattern.Exception.PaymentException;
 import com.group2.factory_pattern.Mapper.AccountMapper;
 import com.group2.factory_pattern.Repository.AccountRepository;
 import com.group2.factory_pattern.Service.AccountService;
@@ -28,4 +29,10 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toDto(accountRepository.save(account));
 
       }
+
+    @Override
+    public Account findByAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new PaymentException("Account not found with number: " + accountNumber));
+    }
 }

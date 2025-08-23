@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -52,5 +54,19 @@ class AccountServiceImplTest {
 
         assertEquals("Account with this number already exists", ex.getMessage());
         verify(accountRepository, never()).save(any());
+    }
+
+    @Test
+    void findAccount_success() {
+        Account entity = new Account("AC1", 500.0, 1000.0);
+        when(accountRepository.findByAccountNumber("AC1")).thenReturn(Optional.of(entity));
+        assertEquals(entity, accountService.findByAccountNumber("AC1"));
+    }
+
+    @Test
+    void findAccount_notFound() {
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> accountService.findByAccountNumber("AC1"));
+        assertEquals("Account not found with number: AC1", ex.getMessage());
     }
 }
