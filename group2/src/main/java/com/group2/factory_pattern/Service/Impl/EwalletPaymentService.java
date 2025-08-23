@@ -4,6 +4,7 @@ import com.group2.factory_pattern.DTO.PaymentRequestDto;
 import com.group2.factory_pattern.DTO.PaymentResponseDto;
 import com.group2.factory_pattern.Entity.Account;
 import com.group2.factory_pattern.Entity.Payment;
+import com.group2.factory_pattern.Enum.PaymentType;
 import com.group2.factory_pattern.Exception.PaymentException;
 import com.group2.factory_pattern.Mapper.PaymentMapper;
 import com.group2.factory_pattern.Repository.AccountRepository;
@@ -23,6 +24,11 @@ public class EwalletPaymentService implements PaymentService {
     PaymentRepository paymentRepository;
     PaymentMapper paymentMapper;
 
+    @Override
+    public PaymentType type() {
+        return PaymentType.EWALLET;
+    }
+
     @Transactional
     @Override
     public PaymentResponseDto pay(PaymentRequestDto request) {
@@ -35,7 +41,7 @@ public class EwalletPaymentService implements PaymentService {
 
         Payment payment = paymentMapper.toEntity(request);
         payment.setAccount(account);
-
+        payment.setMethod(type().name());
         try {
             if (account.getBalance() < request.getAmount()) {
                 payment.setStatus("DECLINED");

@@ -41,9 +41,16 @@ public class PaymentServiceFactoryPatternApplication {
                 System.out.println("Select method: 1.CreditCard  2.EWallet");
                 int method = Integer.parseInt(sc.nextLine());
 
-                PaymentType type = (method == 1) ? PaymentType.CREDIT_CARD : PaymentType.EWALLET;
-
-                PaymentRequestDto request = new PaymentRequestDto(type.getDisplayName(), amount, accountNumber);
+                PaymentType type;
+                if (method == 1) {
+                    type = PaymentType.CREDIT_CARD;
+                } else if (method == 2) {
+                    type = PaymentType.EWALLET;
+                } else {
+                    System.out.println("Invalid selection! Please choose 1 or 2.");
+                    continue;
+                }
+                PaymentRequestDto request = new PaymentRequestDto(amount, accountNumber);
 
                 PaymentResponseDto response = paymentFactory.getService(type).pay(request);
 

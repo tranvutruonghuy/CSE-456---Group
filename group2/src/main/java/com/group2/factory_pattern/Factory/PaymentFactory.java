@@ -12,17 +12,13 @@ import java.util.*;
 
 @Component
 public class PaymentFactory {
-    private final Map<PaymentType, PaymentService> services = new HashMap<>();
+    private final Map<PaymentType, PaymentService> services;
 
     @Autowired
     public PaymentFactory(List<PaymentService> serviceList) {
-        for (PaymentService service : serviceList) {
-            if (service instanceof EwalletPaymentService) {
-                services.put(PaymentType.EWALLET, service);
-            } else if (service instanceof CreditCardPaymentService) {
-                services.put(PaymentType.CREDIT_CARD, service);
-            }
-        }
+        Map<PaymentType, PaymentService> map = new EnumMap<>(PaymentType.class);
+        for (PaymentService s : serviceList) map.put(s.type(), s);
+        this.services = Collections.unmodifiableMap(map);
     }
 
     public PaymentService getService(PaymentType type) {

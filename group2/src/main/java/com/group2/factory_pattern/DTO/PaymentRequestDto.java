@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentRequestDto {
-    String method;
     Double amount;
     String accountNumber;
 }

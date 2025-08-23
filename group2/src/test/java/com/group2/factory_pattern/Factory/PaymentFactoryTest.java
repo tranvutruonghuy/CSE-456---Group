@@ -1,6 +1,8 @@
 package com.group2.factory_pattern.Factory;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import com.group2.factory_pattern.DTO.*;
 import com.group2.factory_pattern.Entity.*;
 import com.group2.factory_pattern.Enum.PaymentType;
@@ -31,6 +33,9 @@ class PaymentFactoryTest {
 
     @BeforeEach
     void setUp() {
+        when(creditCardService.type()).thenReturn(PaymentType.CREDIT_CARD);
+        when(ewalletService.type()).thenReturn(PaymentType.EWALLET);
+
         paymentFactory = new PaymentFactory(List.of(creditCardService, ewalletService));
     }
 
@@ -38,21 +43,20 @@ class PaymentFactoryTest {
     void getService_creditCard() {
         PaymentService service = paymentFactory.getService(PaymentType.CREDIT_CARD);
         assertNotNull(service);
-        assertInstanceOf(CreditCardPaymentService.class, service);
+        assertEquals(creditCardService, service);
     }
 
     @Test
     void getService_ewallet() {
         PaymentService service = paymentFactory.getService(PaymentType.EWALLET);
         assertNotNull(service);
-        assertInstanceOf(EwalletPaymentService.class, service);
+        assertEquals(ewalletService, service);
     }
 
     @Test
     void getService_unsupported() {
-        PaymentType unsupportedType = null;
         PaymentException ex = assertThrows(PaymentException.class,
-                () -> paymentFactory.getService(unsupportedType));
+                () -> paymentFactory.getService(null));
 
         assertTrue(ex.getMessage().contains("Unsupported payment method"));
     }
